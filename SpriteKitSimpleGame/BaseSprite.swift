@@ -18,29 +18,29 @@ class BaseSprite: SKSpriteNode {
     class var spriteType: SpriteType { return inferSpriteType(self) }
 
     class var idleAnimation: [SKTexture] {
-        get { return SharedTextures.textures[charType]?[SharedTextures.Keys.idle] ?? [] }
+        get { return SharedTextures.textures[spriteType]?[SharedTextures.Keys.idle] ?? [] }
         set {
-            var anime = SharedTextures.textures[charType] ?? [String: [SKTexture]]()
+            var anime = SharedTextures.textures[spriteType] ?? [String: [SKTexture]]()
             anime[SharedTextures.Keys.idle] = newValue
-            SharedTextures.textures[charType] = anime
+            SharedTextures.textures[spriteType] = anime
         }
     }
 
     class var walkingAnimation: [SKTexture] {
-        get { return SharedTextures.textures[charType]?[SharedTextures.Keys.walking] ?? [] }
+        get { return SharedTextures.textures[spriteType]?[SharedTextures.Keys.walking] ?? [] }
         set {
-            var animeFramesForCharType = SharedTextures.textures[charType] ?? [String: [SKTexture]]()
+            var animeFramesForCharType = SharedTextures.textures[spriteType] ?? [String: [SKTexture]]()
             animeFramesForCharType[SharedTextures.Keys.walking] = newValue
-            SharedTextures.textures[charType] = animeFramesForCharType
+            SharedTextures.textures[spriteType] = animeFramesForCharType
         }
     }
     
     class var dyingAnimation: [SKTexture] {
-        get { return SharedTextures.textures[charType]?[SharedTextures.Keys.dying] ?? [] }
+        get { return SharedTextures.textures[spriteType]?[SharedTextures.Keys.dying] ?? [] }
         set {
-            var animeFramesForCharType = SharedTextures.textures[charType] ?? [String: [SKTexture]]()
+            var animeFramesForCharType = SharedTextures.textures[spriteType] ?? [String: [SKTexture]]()
             animeFramesForCharType[SharedTextures.Keys.dying] = newValue
-            SharedTextures.textures[charType] = animeFramesForCharType
+            SharedTextures.textures[spriteType] = animeFramesForCharType
         }
     }
 

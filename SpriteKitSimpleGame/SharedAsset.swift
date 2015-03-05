@@ -12,18 +12,19 @@ protocol SharedAssetProvider {
     class func loadSharedAssets()
 }
 
-enum CharacterType {
+enum SpriteType {
+    case Land
     case Player, Slime, Bat, Devil, Boss
 }
 
-func inferCharacterType(fromType: Character.Type) -> CharacterType {
+func inferSpriteType(fromType: BaseSprite.Type) -> SpriteType {
     switch fromType {
     case is Player.Type:
-        return CharacterType.Player
+        return SpriteType.Player
     case is Slime.Type:
-        return CharacterType.Slime
+        return SpriteType.Slime
     default:
-        return CharacterType.Boss
+        return SpriteType.Boss
     }
 }
 
@@ -36,7 +37,7 @@ struct SharedTextures {
         static let dying = "textures.dying"
     }
     
-    static var textures = [CharacterType: [String:[SKTexture]]]()
+    static var textures = [SpriteType: [String:[SKTexture]]]()
 }
 
 struct SharedSprites {
@@ -45,5 +46,5 @@ struct SharedSprites {
 //        static let deathSplort <- ナニコレ珍百景
     }
     
-    static var sprites = [CharacterType: [String:SKSpriteNode]]()
+    static var sprites = [SpriteType: [String:SKSpriteNode]]()
 }

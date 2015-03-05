@@ -11,8 +11,7 @@ import SpriteKit
 class Slime : Enemy {
     
     struct Constants {
-        // UnitSpeed に対する相対的な速度
-        static let movementSpeed = MovementSpeed(val: 1.0)
+        static let movementSpeed: CGFloat = 50.0
     }
     
     var AI: ArtificialIntelligence! = nil
@@ -23,14 +22,11 @@ class Slime : Enemy {
         
         self.init(texture: atlasTexture, atPosition: position)
         name = "Slime"
+        movementSpeed = Constants.movementSpeed
         
         AI = GoStraight(charInstance: self)
     }
-    /*
-    class func clone() -> Slime {
-        return Slime()
-    }
-    */
+    
     class func loadSharedAssets() {
         
     }
