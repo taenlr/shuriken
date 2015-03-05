@@ -15,117 +15,25 @@ enum AnimationState {
 
 /*
     Character
-    役割：スプライト描画＋移動処理
-
+    役割：移動処理
+    　　　projectile property どこに置こう(BaseSpriteか？)
 */
 class Character : BaseSprite {
     
-    var movementSpeed: CGFloat = 100
-    var requestedAnimation = AnimationState.Walking
-    var isDying = false
-    var canResolveAnime = true
-    let animeSpeed: CGFloat = 1.0/40.0
-
-    class var charType: CharacterType { return inferCharacterType(self) }
-
-    class var idleAnimation: [SKTexture] {
-        get { return SharedTextures.textures[charType]?[SharedTextures.Keys.idle] ?? [] }
-        set {
-            var anime = SharedTextures.textures[charType] ?? [String: [SKTexture]]()
-            anime[SharedTextures.Keys.idle] = newValue
-            SharedTextures.textures[charType] = anime
-        }
-    }
-
-    class var walkingAnimation: [SKTexture] {
-        get { return SharedTextures.textures[charType]?[SharedTextures.Keys.walking] ?? [] }
-        set {
-            var animeFramesForCharType = SharedTextures.textures[charType] ?? [String: [SKTexture]]()
-            animeFramesForCharType[SharedTextures.Keys.walking] = newValue
-            SharedTextures.textures[charType] = animeFramesForCharType
-        }
-    }
-    
-    class var dyingAnimation: [SKTexture] {
-        get { return SharedTextures.textures[charType]?[SharedTextures.Keys.dying] ?? [] }
-        set {
-            var animeFramesForCharType = SharedTextures.textures[charType] ?? [String: [SKTexture]]()
-            animeFramesForCharType[SharedTextures.Keys.dying] = newValue
-            SharedTextures.textures[charType] = animeFramesForCharType
-        }
-    }
+    var movementSpeed: CGFloat = 50
     
     class var projectile: SKSpriteNode {
-        get { return SharedSprites.sprites[charType]?[SharedSprites.Keys.projectile] ?? SKSpriteNode() }
+        get { return SharedSprites.sprites[spriteType]?[SharedSprites.Keys.projectile] ?? SKSpriteNode() }
         set {
-            var spritesForCharType = SharedSprites.sprites[charType] ?? [String: SKSpriteNode]()
+            var spritesForCharType = SharedSprites.sprites[spriteType] ?? [String: SKSpriteNode]()
             spritesForCharType[SharedSprites.Keys.projectile] = newValue
-            SharedSprites.sprites[charType] = spritesForCharType
+            SharedSprites.sprites[spriteType] = spritesForCharType
         }
     }
     
-    convenience init(sprites: [SKSpriteNode], atPosition position: CGPoint) {
-        self.init(sprites: sprites, atPosition: position)
-        sharedInitAtPosition(position)
-    }
-    
-    convenience init(texture: SKTexture?, atPosition position: CGPoint) {
-        let size = texture != nil ? texture!.size() : CGSize(width: 0, height: 0)
-        self.init(texture: texture, color: SKColor.whiteColor(), size: size)
-        sharedInitAtPosition(position)
-    }
-    
-    func sharedInitAtPosition(position: CGPoint) {
-        self.position = position
-        configurePhysicsBody()
-    }
-    
-    func configurePhysicsBody() {}
-    
-    func performDeath() {
-        isDying = true
-        requestedAnimation = AnimationState.Dying
-    }
-    
-    func animationFramesAndKeyForState(state: AnimationState) -> ([SKTexture], String) {
-        switch state {
-        case .Walking: return (self.dynamicType.walkingAnimation, "WalkingAnime")
-        case .Dying:   return (self.dynamicType.dyingAnimation, "DyingAnime")
-        default:
-            return (self.dynamicType.idleAnimation, "IdleAnime")
-        }
-    }
-    
-    /*
-        updateWithTimeSinceLastUpdate(interval: NSTimeInterval)
-        役割：スプライト描画処理（インターフェース）
-        備考：クラスを跨いで関数の命名を統一している
-    */
-    func updateWithTimeSinceLastUpdate(interval: NSTimeInterval) {
-        if !canResolveAnime { return }
-        resolveRequestedAnimation()
-    }
-    
-    func animationDidComplete(state: AnimationState) {}
-    
-    func animationHasCompleted(state: AnimationState) {
-        canResolveAnime = false
-        animationDidComplete(state)
-    }
-    
-    func resolveRequestedAnimation() {
-        let animeState = requestedAnimation
-        var (frames, key) = animationFramesAndKeyForState(animeState)
-        doAnimeForState(animeState, usingTextures: frames, withKey: key)
-    }
-    
-    func doAnimeForState(state: AnimationState, usingTextures frames: [SKTexture], withKey key: String) {
-        var animeAct = actionForKey(key)
-        if animeAct != nil   { return }
-        if frames.count < 1 { return }
-        
-        let anime = SKAction.animateWithTextures(frames, timePerFrame: NSTimeInterval(animeSpeed))
-        runAction(SKAction.sequence([anime, SKAction.runBlock({self.animationHasCompleted(state)})]), withKey: key)
+    func move(byDeltaX dx: CGFloat, deltaY dy: CGFloat) {
+        position.x += dx * movementSpeed; position.y += dy * movementSpeed
+        requestedAnimation = AnimationState.Walking
     }
 }
 

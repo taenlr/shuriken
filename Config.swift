@@ -23,11 +23,6 @@ enum FieldStyle {
     case Plain, Cave, InSea, Castle
 }
 
-struct MovementSpeed {
-    var val: CGFloat
-    init(val: CGFloat) { self.val = val }
-}
-
 struct Constants {
     static let baseY = CGFloat(300)
 }
