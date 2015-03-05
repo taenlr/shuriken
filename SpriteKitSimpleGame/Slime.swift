@@ -6,14 +6,32 @@
 //  Copyright (c) 2015年 RoW. All rights reserved.
 //
 
-import Foundation
-
+import SpriteKit
 
 class Slime : Enemy {
     
-    var AI: ArtificalIntelligence
+    struct Constants {
+        // UnitSpeed に対する相対的な速度
+        static let movementSpeed = MovementSpeed(val: 1.0)
+    }
     
-    init(type_: EnemyType) {
-        super.init()
+    var AI: ArtificialIntelligence! = nil
+    
+    convenience init(position: CGPoint) {
+        let atlas = SKTextureAtlas(named: "SlimeWalk")
+        let atlasTexture = atlas.textureNamed("slime.png")
+        
+        self.init(texture: atlasTexture, atPosition: position)
+        name = "Slime"
+        
+        AI = GoStraight(charInstance: self)
+    }
+    /*
+    class func clone() -> Slime {
+        return Slime()
+    }
+    */
+    class func loadSharedAssets() {
+        
     }
 }

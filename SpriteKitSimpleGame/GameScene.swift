@@ -9,35 +9,28 @@
 import SpriteKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
-    let player = SKSpriteNode(imageNamed: "player")
+    var player: Player! = nil
     let scoreLabel = SKLabelNode(fontNamed: regularFontName)
-    let soundMgr = SoundManager()
-    let gameState: GameState
-    
+    var soundMgr: SoundManager! = nil
+    //  var gameState: GameState! = nil
+    //  var entityMgr: EntityManager! = nil
+
     override func didMoveToView(view: SKView) {
+        soundMgr = SoundManager(scene_: self)
+        //entityMgr = EntityManager(scene_: self)
         
-        // 自弾の剛体定義
-        player.physicsBody = SKPhysicsBody(rectangleOfSize: player.size)
-        player.physicsBody?.dynamic = true
-        player.physicsBody?.categoryBitMask = PhysicsCategory.Player
-        player.physicsBody?.contactTestBitMask = PhysicsCategory.Enemy
-        player.physicsBody?.collisionBitMask = PhysicsCategory.None
-        player.physicsBody?.usesPreciseCollisionDetection = true    // 通過を衝突とみなす
         
-        backgroundColor = SKColor.whiteColor()
-        player.position = CGPoint(x: size.width * 0.1, y: size.height * 0.5)
-        addChild(player)
-        runAction(SKAction.repeatActionForever(
+        
+        // 毎秒敵を生成
+        scene.runAction(SKAction.repeatActionForever(
             SKAction.sequence([
-                SKAction.runBlock(addEnemy),
+                SKAction.runBlock(scene.addEnemy),
                 SKAction.waitForDuration(1.0)
                 ])
-        ))
+            ))
+        
+        backgroundColor = SKColor.whiteColor()
         
         physicsWorld.gravity = CGVectorMake(0, 0)
         physicsWorld.contactDelegate = self
@@ -46,7 +39,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func projectileDidCollideWithEnemy(projectile:SKSpriteNode, enemy: SKSpriteNode) {
-        soundMgr.playSound(self, sestyle: SoundManager.SEStyle.Hit)
+        soundMgr.playSound(SoundManager.SEStyle.Hit)
         projectile.removeFromParent()
         enemy.removeFromParent()
     }
@@ -81,20 +74,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func addEnemy() {
-        let enemy = SKSpriteNode(imageNamed: "enemy")
+
         
-        // 敵の剛体定義
-        enemy.physicsBody = SKPhysicsBody(rectangleOfSize: enemy.size)
-        enemy.physicsBody?.dynamic = true
-        enemy.physicsBody?.categoryBitMask = PhysicsCategory.Enemy
-        enemy.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile
-        enemy.physicsBody?.collisionBitMask = PhysicsCategory.None
         
-        let actualY = Misc.random(enemy.size.height*2, max: size.height - enemy.size.height*2)
         
-        enemy.position = CGPoint(x: size.width+enemy.size.width/2, y: actualY)
         
-        addChild(enemy)
+        
+        
+        
+        
         let actualDuration = Misc.random(CGFloat(2.0), max: CGFloat(4.0))
         
         let actionMove = SKAction.moveTo(CGPoint(x: -enemy.size.width/2, y: actualY), duration: NSTimeInterval(actualDuration))
@@ -104,7 +92,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
         
-        soundMgr.playSound(self, sestyle: SoundManager.SEStyle.Hit)
+        soundMgr.playSound(SoundManager.SEStyle.Hit)
         
         let touch = touches.anyObject() as UITouch
         let touchLocation = touch.locationInNode(self)

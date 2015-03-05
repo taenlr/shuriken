@@ -12,8 +12,10 @@ import SpriteKit
 
 class SoundManager {
     var backgroundMusicPlayer: AVAudioPlayer!
+    let scene: GameScene
     
-    init() {}
+    init() { scene = GameScene() }
+    init(scene_: GameScene) { scene = scene_ }
     
     enum SEStyle {
         case Throw, Hit
@@ -48,7 +50,7 @@ class SoundManager {
         backgroundMusicPlayer.play()
     }
     
-    func playSound(instance: GameScene, sestyle: SEStyle) {
+    func playSound(sestyle: SEStyle) {
         
         var fname: String
         switch sestyle {
@@ -60,7 +62,7 @@ class SoundManager {
             fname = Constants.fnameSEThrow
         }
         
-        instance.runAction(SKAction.playSoundFileNamed(fname, waitForCompletion: false))
+        scene.runAction(SKAction.playSoundFileNamed(fname, waitForCompletion: false))
     }
 }
 

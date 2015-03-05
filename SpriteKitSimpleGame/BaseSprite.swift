@@ -1,32 +1,21 @@
 //
-//  Character.swift
+//  BaseSprite.swift
 //  SpriteKitSimpleGame
 //
-//  Created by moti on 2015/03/03.
+//  Created by moti on 2015/03/05.
 //  Copyright (c) 2015年 RoW. All rights reserved.
 //
 
-import UIKit
 import SpriteKit
 
-enum AnimationState {
-    case Idle, Walking, Dying
-}
-
-/*
-    Character
-    役割：スプライト描画＋移動処理
-
-*/
-class Character : BaseSprite {
+class BaseSprite: SKSpriteNode {
     
-    var movementSpeed: CGFloat = 100
     var requestedAnimation = AnimationState.Walking
     var isDying = false
     var canResolveAnime = true
     let animeSpeed: CGFloat = 1.0/40.0
 
-    class var charType: CharacterType { return inferCharacterType(self) }
+    class var spriteType: SpriteType { return inferSpriteType(self) }
 
     class var idleAnimation: [SKTexture] {
         get { return SharedTextures.textures[charType]?[SharedTextures.Keys.idle] ?? [] }
@@ -54,16 +43,7 @@ class Character : BaseSprite {
             SharedTextures.textures[charType] = animeFramesForCharType
         }
     }
-    
-    class var projectile: SKSpriteNode {
-        get { return SharedSprites.sprites[charType]?[SharedSprites.Keys.projectile] ?? SKSpriteNode() }
-        set {
-            var spritesForCharType = SharedSprites.sprites[charType] ?? [String: SKSpriteNode]()
-            spritesForCharType[SharedSprites.Keys.projectile] = newValue
-            SharedSprites.sprites[charType] = spritesForCharType
-        }
-    }
-    
+
     convenience init(sprites: [SKSpriteNode], atPosition position: CGPoint) {
         self.init(sprites: sprites, atPosition: position)
         sharedInitAtPosition(position)
@@ -127,17 +107,5 @@ class Character : BaseSprite {
         let anime = SKAction.animateWithTextures(frames, timePerFrame: NSTimeInterval(animeSpeed))
         runAction(SKAction.sequence([anime, SKAction.runBlock({self.animationHasCompleted(state)})]), withKey: key)
     }
+    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

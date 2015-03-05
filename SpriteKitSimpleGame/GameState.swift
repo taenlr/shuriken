@@ -9,17 +9,17 @@
 
 class GameState {
     
-    enum GState {
+    enum State {
         case Opening, GameOver
         case Field, Boss
     }
     
-    var gstate: GState
-    var level:  Int
+    var gameState: State
+    var level: Int
     
-    init(gstate_: GState, level_: Int) {
-        gstate = gstate_
-        level = level_
+    init(gameState: State, level: Int) {
+        self.gameState = gameState
+        self.level = level
     }
     
 }

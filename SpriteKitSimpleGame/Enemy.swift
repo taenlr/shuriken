@@ -6,24 +6,23 @@
 //  Copyright (c) 2015年 RoW. All rights reserved.
 //
 
-import Foundation
+import SpriteKit
 
 struct EnemyLife {
     var val: Int
     init() { val = 0 }
 }
 
-enum EnemyType {
-    case Slime, Bat, Devil
-}
-
 class Enemy : Character {
-    var life: EnemyLife
-    var type: EnemyType
     
-    init(type_: EnemyType) {
-        life = EnemyLife()
-        type = type_
-        super.init()
+    var life = EnemyLife()
+    
+    override func configurePhysicsBody() {
+        // 敵の剛体定義
+        physicsBody = SKPhysicsBody(rectangleOfSize: size)
+        physicsBody?.dynamic = true
+        physicsBody?.categoryBitMask = PhysicsCategory.Enemy
+        physicsBody?.contactTestBitMask = PhysicsCategory.Projectile
+        physicsBody?.collisionBitMask = PhysicsCategory.None
     }
 }

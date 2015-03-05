@@ -6,6 +6,8 @@
 //  Copyright (c) 2015年 RoW. All rights reserved.
 //
 
+import UIKit
+
 let regularFontName = "nukamiso2004"
 
 struct PhysicsCategory {
@@ -19,4 +21,13 @@ struct PhysicsCategory {
 
 enum FieldStyle {
     case Plain, Cave, InSea, Castle
+}
+
+struct MovementSpeed {
+    var val: CGFloat
+    init(val: CGFloat) { self.val = val }
+}
+
+struct Constants {
+    static let baseY = CGFloat(300)
 }
